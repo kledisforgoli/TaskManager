@@ -1,0 +1,152 @@
+﻿@model inxhsofti.Models.TaskItem
+@{
+    ViewData["Title"] = "Edito Detyrën";
+    var errorMessage = TempData["ErrorMessage"] as string;
+}
+
+<div class="container py-4">
+    <div class="card shadow">
+        <div class="card-header bg-warning text-dark">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">
+                    <i class="fas fa-edit me-2"></i>@ViewData["Title"]
+                </h2>
+                <span class="badge bg-light text-dark">ID: @Model.Id</span>
+            </div>
+        </div>
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i> @errorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <!-- Detajet kryesore -->
+                        <div class="form-group mb-3">
+                            <label asp-for="Title" class="form-label fw-bold">Titulli</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-heading"></i></span>
+                                <input asp-for="Title" class="form-control" />
+                            </div>
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Description" class="form-label fw-bold">Përshkrimi</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-align-left"></i></span>
+                                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            </div>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <!-- Paneli anësor -->
+                        <div class="card border-light mb-3">
+                            <div class="card-header bg-light">Detaje shtesë</div>
+                            <div class="card-body">
+                                <div class="form-group mb-3">
+                                    <label asp-for="DueDate" class="form-label fw-bold">Afati</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                        <input asp-for="DueDate" type="date" class="form-control" />
+                                    </div>
+                                    <span asp-validation-for="DueDate" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label fw-bold d-block">Statusi</label>
+                                    <div class="form-check form-switch">
+                                        <input asp-for="IsCompleted" class="form-check-input" type="checkbox" role="switch" />
+                                        <label asp-for="IsCompleted" class="form-check-label">
+                                            @if (Model.IsCompleted)
+                                            {
+                                                <span class="text-success"><i class="fas fa-check-circle me-1"></i> E përfunduar</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-warning"><i class="fas fa-hourglass-half me-1"></i> E papërfunduar</span>
+                                            }
+                                        </label>
+                                    </div>
+                                </div>
+
+                                @if (Model.DueDate.HasValue)
+                                {
+                                    <div class="text-muted small mt-3">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        @{
+                                            var dayDiff = (Model.DueDate.Value - DateTime.Today).Days;
+
+                                            if (dayDiff < 0 && !Model.IsCompleted)
+                                            {
+                                                <span class="text-danger">Afati ka kaluar prej @Math.Abs(dayDiff) ditësh</span>
+                                            }
+                                            else if (dayDiff == 0 && !Model.IsCompleted)
+                                            {
+                                                <span class="text-danger fw-bold">Afati mbaron sot!</span>
+                                            }
+                                            else if (dayDiff > 0 && !Model.IsCompleted)
+                                            {
+                                                <span>Kanë mbetur edhe @dayDiff ditë</span>
+                                            }
+                                            else if (Model.IsCompleted)
+                                            {
+                                                <span class="text-success">Detyra është përfunduar</span>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="form-group d-flex gap-2">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-1"></i> Ruaj Ndryshimet
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i> Anulo
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-muted small">
+            <i class="fas fa-clock me-1"></i> Modifikuar për herë të fundit: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <!-- Përfshirja e Font Awesome për ikonat -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    <script>
+        // Inicializimi i elementeve Bootstrap
+        $(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+
+            // Logjikë për ndryshimin e tekstit të statusit kur ndryshon checkbox-i
+            $('#IsCompleted').change(function() {
+                if($(this).is(':checked')) {
+                    $(this).next('label').html('<span class="text-success"><i class="fas fa-check-circle me-1"></i> E përfunduar</span>');
+                } else {
+                    $(this).next('label').html('<span class="text-warning"><i class="fas fa-hourglass-half me-1"></i> E papërfunduar</span>');
+                }
+            });
+        });
+    </script>
+}

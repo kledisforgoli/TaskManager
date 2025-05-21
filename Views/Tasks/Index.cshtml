@@ -1,0 +1,232 @@
+﻿@model IEnumerable<inxhsofti.Models.TaskItem>
+@{
+    ViewData["Title"] = "Detyrat e mia";
+    var successMessage = ViewBag.SuccessMessage;
+    var errorMessage = ViewBag.ErrorMessage;
+
+    // Marrim parametrin e rendimit nga URL
+    var sortParam = Context.Request.Query["sort"].ToString();
+
+    // Rendisim detyrat sipas parametrit
+    var sortedTasks = Model;
+    if (!string.IsNullOrEmpty(sortParam))
+    {
+        switch (sortParam)
+        {
+            case "dueDate":
+                // Rendisim nga data më e afërt, duke vendosur null datat në fund
+                sortedTasks = Model.OrderBy(t => t.DueDate == null).ThenBy(t => t.DueDate);
+                break;
+            case "dueDate_desc":
+                sortedTasks = Model.OrderBy(t => t.DueDate == null).ThenByDescending(t => t.DueDate);
+                break;
+            case "title":
+                sortedTasks = Model.OrderBy(t => t.Title);
+                break;
+            case "status":
+                sortedTasks = Model.OrderBy(t => !t.IsCompleted); // Detyrat e papërfunduara në fillim
+                break;
+            default:
+                // Parazgjedhja: rendit nga data më e afërt
+                sortedTasks = Model.OrderBy(t => t.DueDate == null).ThenBy(t => t.DueDate);
+                break;
+        }
+    }
+    else
+    {
+        // Parazgjedhja kur nuk ka parametër rendimi: rendisim nga data më e afërt
+        sortedTasks = Model.OrderBy(t => t.DueDate == null).ThenBy(t => t.DueDate);
+    }
+}
+
+<div class="container py-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0 text-primary">
+                <i class="fas fa-tasks me-2"></i>Detyrat e mia
+            </h2>
+            <p class="text-muted small mt-1">
+                Menaxhoni të gjitha detyrat tuaja në një vend
+                @if (!string.IsNullOrEmpty(sortParam))
+                {
+                    <span class="badge bg-light text-dark ms-2">
+                        <i class="fas fa-sort me-1"></i>
+                        @switch (sortParam)
+                        {
+                            case "dueDate":
+                                <span>Rendisur sipas datës më të afërt</span>
+                                break;
+                            case "dueDate_desc":
+                                <span>Rendisur sipas datës më të largët</span>
+                                break;
+                            case "title":
+                                <span>Rendisur sipas titullit (A-Z)</span>
+                                break;
+                            case "status":
+                                <span>Rendisur sipas statusit</span>
+                                break;
+                        }
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-light text-dark ms-2">
+                        <i class="fas fa-sort me-1"></i> Rendisur sipas datës më të afërt
+                    </span>
+                }
+            </p>
+        </div>
+        <div>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-1"></i> Krijo detyrë të re
+            </a>
+        </div>
+    </div>
+
+    <!-- Alerts Section -->
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @successMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> @errorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Task List Content -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4"><i class="fas fa-heading me-1 text-muted"></i> Titulli</th>
+                                <th><i class="fas fa-align-left me-1 text-muted"></i> Përshkrimi</th>
+                                <th><i class="fas fa-calendar me-1 text-muted"></i> Afati</th>
+                                <th><i class="fas fa-check-circle me-1 text-muted"></i> Statusi</th>
+                                <th class="text-center"><i class="fas fa-cogs me-1 text-muted"></i> Veprime</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var task in sortedTasks)
+                            {
+                                <tr class="@(task.IsCompleted ? "table-success bg-opacity-25" : "")">
+                                    <td class="ps-4 fw-bold">@task.Title</td>
+                                    <td class="text-truncate" style="max-width: 250px;">@task.Description</td>
+                                    <td>
+                                        @if (task.DueDate.HasValue)
+                                        {
+                                            var isPastDue = task.DueDate < DateTime.Today && !task.IsCompleted;
+                                            <span class="@(isPastDue ? "text-danger" : "")">
+                                                @if (isPastDue)
+                                                {
+                                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                                }
+                                                @task.DueDate?.ToShortDateString()
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">Pa afat</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (task.IsCompleted)
+                                        {
+                                            <span class="badge bg-success"><i class="fas fa-check me-1"></i> E përfunduar</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half me-1"></i> E papërfunduar</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary" title="Edito">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@task.Id" class="btn btn-sm btn-outline-danger" title="Fshi">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-clipboard-list text-muted" style="font-size: 4rem;"></i>
+                    <h5 class="mt-3">Nuk keni asnjë detyrë të shtuar</h5>
+                    <p class="text-muted">
+                        Klikoni butonin "Krijo detyrë të re" për të filluar
+                    </p>
+                    <a asp-action="Create" class="btn btn-primary mt-2">
+                        <i class="fas fa-plus-circle me-1"></i> Krijo detyrë të re
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Filtrim dhe kërkimi -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="card shadow-sm mt-3">
+            <div class="card-body py-3">
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <div class="text-muted small mb-2 mb-md-0">
+                            <i class="fas fa-info-circle me-1"></i> Shfaqen @Model.Count() detyra
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="d-flex gap-2 justify-content-md-end">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-sort me-1"></i> Rendit sipas
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                                    <li><a class="dropdown-item" href="?sort=dueDate"><i class="fas fa-clock me-2"></i> Data më e afërt</a></li>
+                                    <li><a class="dropdown-item" href="?sort=dueDate_desc"><i class="fas fa-clock me-2"></i> Data më e largët</a></li>
+                                    <li><a class="dropdown-item" href="?sort=title"><i class="fas fa-font me-2"></i> Titulli (A-Z)</a></li>
+                                    <li><a class="dropdown-item" href="?sort=status"><i class="fas fa-check-circle me-2"></i> Statusi</a></li>
+                                </ul>
+                            </div>
+                            <a asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-sync-alt me-1"></i> Rifresko
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <!-- Përfshirja e Font Awesome për ikonat -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    <script>
+        // Inicializimi i Bootstrap tooltips
+        $(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+
+            // Mundëson tooltip për butonat e veprimit
+            $('.btn[title]').tooltip();
+        });
+    </script>
+}

@@ -1,0 +1,146 @@
+﻿@{
+    ViewData["Title"] = "Hyrje";
+    var errorMessage = TempData["ErrorMessage"] as string;
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 60px auto;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        background-color: white;
+    }
+
+    .auth-title {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #4c6ef5;
+        font-weight: 600;
+    }
+
+    .auth-form .form-group {
+        margin-bottom: 20px;
+    }
+
+    .auth-form label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #343a40;
+    }
+
+    .auth-form input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: #4c6ef5;
+            box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.1);
+        }
+
+    .auth-form button {
+        width: 100%;
+        padding: 12px;
+        background-color: #4c6ef5;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 10px;
+    }
+
+        .auth-form button:hover {
+            background-color: #3b5bdb;
+        }
+
+    .auth-error {
+        color: #fa5252;
+        font-size: 14px;
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #fa5252;
+        border-radius: 5px;
+        background-color: rgba(250, 82, 82, 0.05);
+        text-align: center;
+    }
+
+    .auth-success {
+        color: #40c057;
+        font-size: 14px;
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #40c057;
+        border-radius: 5px;
+        background-color: rgba(64, 192, 87, 0.05);
+        text-align: center;
+    }
+
+    .validation-message {
+        color: #fa5252;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .auth-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .auth-link a {
+            color: #4c6ef5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .auth-link a:hover {
+                text-decoration: underline;
+            }
+</style>
+
+<div class="auth-container">
+    <h2 class="auth-title">Hyrje në sistem</h2>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="auth-error">@errorMessage</div>
+    }
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="auth-success">@successMessage</div>
+    }
+
+    <form class="auth-form" asp-action="Login" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Fjalëkalimi:</label>
+            <input type="password" id="password" name="password" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Hyr</button>
+        </div>
+
+        <div class="auth-link">
+            Nuk keni një llogari? <a asp-action="Register">Regjistrohuni këtu</a>
+        </div>
+    </form>
+</div>

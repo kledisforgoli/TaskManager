@@ -1,0 +1,188 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@{
+    ViewData["Title"] = "Faqja Kryesore";
+}
+
+<div class="welcome-container">
+    <div class="welcome-header">
+        <h1 class="welcome-title">Mirë se vini në TaskMaster</h1>
+        <div class="title-underline"></div>
+    </div>
+
+    @if (string.IsNullOrEmpty(Context.Session.GetString("user")))
+    {
+        <div class="auth-buttons">
+            <a href="@Url.Action("Login", "Account")" class="login-btn">
+                <span class="btn-icon">
+                </span>
+                Hyr
+            </a>
+            <a href="@Url.Action("Register", "Account")" class="register-btn">
+                <span class="btn-icon">
+                </span>
+                Regjistrohu
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="welcome-message">
+            <p>Jeni loguar. <a href="@Url.Action("Logout", "Account")">Dilni</a></p>
+        </div>
+    }
+
+    @if (ViewBag.WelcomeMessage != null)
+    {
+        <div class="welcome-message">
+            <p>@ViewBag.WelcomeMessage</p>
+        </div>
+        <form action="@Url.Action("Logout", "Home")" method="post">
+            <button type="submit" class="logout-btn">Dil</button>
+        </form>
+    }
+    else
+    {
+        <div class="welcome-message">
+            <p>Organizoni projektet tuaja me lehtësi dhe efikasitet</p>
+        </div>
+        <p class="learn-more">Identifikohuni për të aksesuar tabelat e detyrave tuaja dhe për të filluar menaxhimin e projekteve.</p>
+    }
+</div>
+
+
+<style>
+    .welcome-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 3rem 1rem;
+        text-align: center;
+    }
+
+    .welcome-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .welcome-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2563eb;
+        margin-bottom: 1rem;
+    }
+
+    .title-underline {
+        height: 4px;
+        width: 100px;
+        background: linear-gradient(to right, #2563eb, #60a5fa);
+        margin: 0 auto;
+        border-radius: 4px;
+    }
+
+    .welcome-message {
+        background-color: #f8fafc;
+        border-left: 4px solid #2563eb;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+        .welcome-message p {
+            font-size: 1.25rem;
+            color: #334155;
+            margin: 0;
+        }
+
+    .learn-more {
+        margin-bottom: 2rem;
+        color: #64748b;
+    }
+
+        .learn-more a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+            .learn-more a:hover {
+                color: #1e40af;
+                text-decoration: underline;
+            }
+
+    .auth-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .login-btn, .register-btn, .logout-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+
+    .login-btn {
+        background-color: #2563eb;
+        color: white;
+    }
+
+        .login-btn:hover {
+            background-color: #1e40af;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+    .register-btn {
+        background-color: white;
+        color: #2563eb;
+        border: 2px solid #2563eb;
+    }
+
+        .register-btn:hover {
+            background-color: #f0f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .logout-btn {
+        background-color: #ef4444;
+        color: white;
+    }
+
+        .logout-btn:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+        }
+
+    .btn-icon {
+        margin-right: 0.5rem;
+        display: inline-flex;
+    }
+
+
+    @@media (max-width: 640px) {
+        .auth-buttons {
+            flex-direction: column;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .login-btn, .register-btn {
+            width: 100%;
+        }
+    }
+</style>
