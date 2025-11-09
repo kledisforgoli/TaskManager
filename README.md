@@ -10,7 +10,11 @@ A task manager app that allows users to:
 - Filter tasks by date, title, status
 
 ### Tech Stack
-This project is written in .NET Core, SQL Server, HTML + CSS, Bootstrap.
+- .NET Core
+- SQL Server
+- Entity Framework Core
+- HTML + CSS
+- Bootstrap
 
 ### Functionality
 
