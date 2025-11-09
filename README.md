@@ -3,6 +3,7 @@
 A task manager app that allows users to: 
 - Login
 - Sign Up
+- Logout
 - List all tasks
 - Create tasks
 - Edit tasks
