@@ -9,10 +9,10 @@ A task manager that allows users to:
 - Delete tasks
 - Filter tasks by date, title, status
 
-  ### Tech Stack
+### Tech Stack
   This project is written in .NET Core, SQL Server
 
-  ### Functionality
+### Functionality
 
 Login:
 ![login](https://github.com/user-attachments/assets/c892a77b-279c-456c-bb4d-a6deba17a633)
@@ -20,7 +20,7 @@ Login:
 Signup:
 ![signup](https://github.com/user-attachments/assets/bfdae7cc-ead7-41a2-8972-855b9c77edcc)
 
-Validations: 
+Validations:
 ![validations](https://github.com/user-attachments/assets/4a1e366a-b7bd-4f4f-a308-3c1b3a284f16)
 
 Account Exists: 
