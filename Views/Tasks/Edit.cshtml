@@ -29,7 +29,7 @@
 
                 <div class="row">
                     <div class="col-md-8">
-                        <!-- Detajet kryesore -->
+                        
                         <div class="form-group mb-3">
                             <label asp-for="Title" class="form-label fw-bold">Titulli</label>
                             <div class="input-group">
@@ -50,7 +50,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <!-- Paneli anësor -->
+                        
                         <div class="card border-light mb-3">
                             <div class="card-header bg-light">Detaje shtesë</div>
                             <div class="card-body">
@@ -131,15 +131,15 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <!-- Përfshirja e Font Awesome për ikonat -->
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 
     <script>
-        // Inicializimi i elementeve Bootstrap
+        
         $(function () {
             $('[data-bs-toggle="tooltip"]').tooltip();
 
-            // Logjikë për ndryshimin e tekstit të statusit kur ndryshon checkbox-i
+            
             $('#IsCompleted').change(function() {
                 if($(this).is(':checked')) {
                     $(this).next('label').html('<span class="text-success"><i class="fas fa-check-circle me-1"></i> E përfunduar</span>');

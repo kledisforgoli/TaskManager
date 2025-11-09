@@ -19,7 +19,7 @@ namespace inxhsofti.Controllers
 
         public IActionResult Create()
         {
-            // Check if user is logged in
+            
             var loggedInUser = HttpContext.Session.GetString("user");
             if (string.IsNullOrEmpty(loggedInUser))
             {
@@ -103,7 +103,7 @@ namespace inxhsofti.Controllers
                     return RedirectToAction("Login", "Account");
                 }
 
-                // Merr detyrat duke përfshirë të dhënat e përdoruesit
+                
                 var tasks = _context.Tasks
                     .Where(t => t.UserId == user.Id)
                     .ToList();
@@ -131,7 +131,7 @@ namespace inxhsofti.Controllers
                 return NotFound();
             }
 
-            // Check if the task belongs to the logged in user
+            
             var loggedInUser = HttpContext.Session.GetString("user");
             var user = _context.Users.FirstOrDefault(u => u.Username == loggedInUser);
             if (user == null || task.UserId != user.Id)
@@ -154,7 +154,7 @@ namespace inxhsofti.Controllers
                     var user = _context.Users.FirstOrDefault(u => u.Username == loggedInUser);
                     if (user != null)
                     {
-                        // Verify the task belongs to this user
+                        
                         var existingTask = _context.Tasks.Find(task.Id);
                         if (existingTask != null && existingTask.UserId == user.Id)
                         {
@@ -190,7 +190,7 @@ namespace inxhsofti.Controllers
                 return NotFound();
             }
 
-            // Check if the task belongs to the logged in user
+            
             var loggedInUser = HttpContext.Session.GetString("user");
             var user = _context.Users.FirstOrDefault(u => u.Username == loggedInUser);
             if (user == null || task.UserId != user.Id)
@@ -211,7 +211,7 @@ namespace inxhsofti.Controllers
                 return NotFound();
             }
 
-            // Check if the task belongs to the logged in user
+            
             var loggedInUser = HttpContext.Session.GetString("user");
             var user = _context.Users.FirstOrDefault(u => u.Username == loggedInUser);
             if (user == null || task.UserId != user.Id)

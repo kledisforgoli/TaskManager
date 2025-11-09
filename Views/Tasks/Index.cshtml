@@ -4,17 +4,17 @@
     var successMessage = ViewBag.SuccessMessage;
     var errorMessage = ViewBag.ErrorMessage;
 
-    // Marrim parametrin e rendimit nga URL
+    
     var sortParam = Context.Request.Query["sort"].ToString();
 
-    // Rendisim detyrat sipas parametrit
+    
     var sortedTasks = Model;
     if (!string.IsNullOrEmpty(sortParam))
     {
         switch (sortParam)
         {
             case "dueDate":
-                // Rendisim nga data më e afërt, duke vendosur null datat në fund
+                
                 sortedTasks = Model.OrderBy(t => t.DueDate == null).ThenBy(t => t.DueDate);
                 break;
             case "dueDate_desc":
@@ -24,23 +24,23 @@
                 sortedTasks = Model.OrderBy(t => t.Title);
                 break;
             case "status":
-                sortedTasks = Model.OrderBy(t => !t.IsCompleted); // Detyrat e papërfunduara në fillim
+                sortedTasks = Model.OrderBy(t => !t.IsCompleted); 
                 break;
             default:
-                // Parazgjedhja: rendit nga data më e afërt
+                
                 sortedTasks = Model.OrderBy(t => t.DueDate == null).ThenBy(t => t.DueDate);
                 break;
         }
     }
     else
     {
-        // Parazgjedhja kur nuk ka parametër rendimi: rendisim nga data më e afërt
+       
         sortedTasks = Model.OrderBy(t => t.DueDate == null).ThenBy(t => t.DueDate);
     }
 }
 
 <div class="container py-4">
-    <!-- Header Section -->
+   
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="mb-0 text-primary">
@@ -84,7 +84,7 @@
         </div>
     </div>
 
-    <!-- Alerts Section -->
+    
     @if (!string.IsNullOrEmpty(successMessage))
     {
         <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
@@ -100,7 +100,7 @@
         </div>
     }
 
-    <!-- Task List Content -->
+    
     <div class="card shadow-sm">
         <div class="card-body p-0">
             @if (Model != null && Model.Any())
@@ -181,7 +181,7 @@
         </div>
     </div>
 
-    <!-- Filtrim dhe kërkimi -->
+    
     @if (Model != null && Model.Any())
     {
         <div class="card shadow-sm mt-3">
@@ -217,15 +217,15 @@
 </div>
 
 @section Scripts {
-    <!-- Përfshirja e Font Awesome për ikonat -->
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 
     <script>
-        // Inicializimi i Bootstrap tooltips
+        
         $(function () {
             $('[data-bs-toggle="tooltip"]').tooltip();
 
-            // Mundëson tooltip për butonat e veprimit
+            
             $('.btn[title]').tooltip();
         });
     </script>

@@ -62,7 +62,7 @@ namespace inxhsofti.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            // If user is already logged in, redirect to Tasks
+            
             if (HttpContext.Session.GetString("user") != null)
             {
                 return RedirectToAction("Index", "Tasks");
@@ -90,10 +90,10 @@ namespace inxhsofti.Controllers
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");
                 var principal = new ClaimsPrincipal(identity);
 
-                // Përdor skemën e duhur për autentikim
+                
                 await HttpContext.SignInAsync("MyCookieAuth", principal, new AuthenticationProperties
                 {
-                    IsPersistent = false // Ose true nëse dëshironi "Remember Me"
+                    IsPersistent = false 
                 });
 
                 HttpContext.Session.SetString("user", user.Username);

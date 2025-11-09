@@ -4,18 +4,18 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Shto shërbimet e nevojshme
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Konfiguro sesionet
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-// Shto autentikimin me cookie
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -34,11 +34,11 @@ builder.Services.AddAuthentication(options =>
     options.Cookie.HttpOnly = true;
 });
 
-// Konfiguro Entity Framework Core
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Konfiguro autentikimin
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -48,7 +48,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 var app = builder.Build();
 
-// Konfiguro pipeline-in e HTTP
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -58,7 +58,7 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
-app.UseAuthentication(); // Kjo duhet të jetë para UseAuthorization
+app.UseAuthentication(); 
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",

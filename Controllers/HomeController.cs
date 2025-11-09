@@ -19,15 +19,15 @@ namespace inxhsofti.Controllers
 
         public IActionResult Index()
         {
-            // Check if the user is logged in using session
+            
             var loggedInUser = HttpContext.Session.GetString("user");
             if (string.IsNullOrEmpty(loggedInUser))
             {
-                // Redirect to login page if not logged in
+                
                 return RedirectToAction("Login", "Account");
             }
 
-            // Since the user is logged in, we'll redirect to the Tasks index page
+            
             return RedirectToAction("Index", "Tasks");
         }
 
@@ -45,7 +45,7 @@ namespace inxhsofti.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            // Clear the session and log out the user
+            
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync("MyCookieAuth");
             return RedirectToAction("Login", "Account");
